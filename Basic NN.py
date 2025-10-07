@@ -21,7 +21,7 @@ class Model(nn.Module):
     return x
   
   #Pick a manual seed for randomization
-torch.manual_seed(41)
+torch.manual_seed(32)
 #Create instance of model
 model=Model()
 
@@ -48,7 +48,7 @@ X=X.values
 y=y.values
 from sklearn.model_selection import train_test_split
 #train test split
-X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.2,random_state=41)
+X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.2,random_state=32)
 #convert X features to float tensors
 X_train=torch.FloatTensor(X_train)
 X_test=torch.FloatTensor(X_test)
@@ -87,3 +87,25 @@ for i in range(epochs):
 plt.plot(range(epochs),losses)
 plt.ylabel("loss/error")
 plt.xlabel("Epochs")
+
+#Evaluate Model on Test Data set
+with torch.no_grad(): #turn off backpropogation
+  y_eval=model.forward(X_test) #X_test are features from test set, y_eval
+  loss=criterion(y_eval,y_test) #find the losses or error
+
+loss
+correct=0
+with torch.no_grad():
+  for i,data in enumerate(X_test):
+    y_val=model.forward(data)
+
+   
+    
+    #will tell us what type of flower class our network thinks it is
+    print(f"{i+1}.) {str(y_val)} \t {y_test[i]} \t {y_val.argmax().item()}")
+
+    #correct or not
+    if y_val.argmax().item()==y_test[i]:
+      correct+=1
+   
+print(f"we got {correct} correct")
